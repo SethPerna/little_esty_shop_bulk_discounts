@@ -1,5 +1,5 @@
 require 'rails_helper'
-describe 'merchant bulk discount index page' do
+describe 'merchant new bulk discount page' do
   before do
     @merchant1 = Merchant.create!(name: 'Hair Care')
 
@@ -43,35 +43,14 @@ describe 'merchant bulk discount index page' do
     @bulk_2 = @merchant1.bulk_discounts.create!(percent: 10, threshold: 15)
     @bulk_3 = @merchant1.bulk_discounts.create!(percent: 15, threshold: 20)
     @bulk_4 = @merchant1.bulk_discounts.create!(percent: 20, threshold: 25)
-    visit "/merchant/#{@merchant1.id}/bulk_discounts"
+    visit "/merchant/#{@merchant1.id}/bulk_discounts/new"
   end
 
-  it 'I see all of my bulk discounts w/percent and quantity threshold' do
-    within "#discount-#{@bulk_1.id}" do
-      expect(page).to have_content("#{@bulk_1.percent} percent off of #{@bulk_1.threshold} or more items")
-    end
-    within "#discount-#{@bulk_2.id}" do
-      expect(page).to have_content("#{@bulk_2.percent} percent off of #{@bulk_2.threshold} or more items")
-    end
-    within "#discount-#{@bulk_3.id}" do
-      expect(page).to have_content("#{@bulk_3.percent} percent off of #{@bulk_3.threshold} or more items")
-    end
-    within "#discount-#{@bulk_4.id}" do
-      expect(page).to have_content("#{@bulk_4.percent} percent off of #{@bulk_4.threshold} or more items")
-    end
-  end
-
-  it 'each discount is a link to its show page' do
-    within "#discount-#{@bulk_1.id}" do
-      expect(page).to have_link(@bulk_1.percent)
-      click_link(@bulk_1.percent)
-      expect(current_path).to eq("/merchant/#{@merchant1.id}/bulk_discounts/#{@bulk_1.id}")
-    end
-  end
-
-  it 'has link to create new discount, I am taken to a new page with a form to add a discount' do
-    expect(page).to have_button("New Discount")
-    click_button("New Discount")
-    expect(current_path).to eq("/merchant/#{@merchant1.id}/bulk_discounts/new")
+  it 'has a form to create a new discount when filled in I am taken back to index page and I see new discount' do
+    fill_in("Percent", with: 35)
+    fill_in("Threshold", with: 30)
+    click_button("Submit")
+    expect(current_path).to eq("/merchant/#{@merchant1.id}/bulk_discounts")
+    expect(page).to have_content("35 percent off of 30 or more items")
   end
 end
