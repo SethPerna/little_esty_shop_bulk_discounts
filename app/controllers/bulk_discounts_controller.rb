@@ -16,4 +16,11 @@ class BulkDiscountsController < ApplicationController
     @merchant.bulk_discounts.create!(percent: params[:percent], threshold: params[:threshold])
     redirect_to "/merchant/#{@merchant.id}/bulk_discounts"
   end
+
+  def destroy
+    merchant = Merchant.find(params[:merchant_id])
+    bulk_discount = BulkDiscount.find(params[:id])
+    bulk_discount.destroy
+    redirect_to "/merchant/#{merchant.id}/bulk_discounts"
+  end
 end
