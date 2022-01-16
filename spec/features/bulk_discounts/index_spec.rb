@@ -74,4 +74,13 @@ describe 'merchant bulk discount index page' do
     click_button("New Discount")
     expect(current_path).to eq("/merchant/#{@merchant1.id}/bulk_discounts/new")
   end
+
+  it 'has a link to delete each bulk discount' do
+    within "#discount-#{@bulk_1.id}" do
+      expect(page).to have_button("Delete Discount")
+      click_button("Delete Discount")
+      expect(current_path).to eq("/merchant/#{@merchant1.id}/bulk_discounts")
+    end
+    expect(page).to_not have_content("#{@bulk_1.percent} percent off of #{@bulk_1.threshold} or more items")
+  end
 end
