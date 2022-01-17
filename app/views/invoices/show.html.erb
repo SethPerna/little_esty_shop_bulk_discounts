@@ -20,8 +20,11 @@
   <br>
 
   <p> Created on: <%= @invoice.created_at.strftime("%A, %B %-d, %Y") %></p>
-  <p>Total Revenue: <%= @invoice.total_revenue %></p>
-
+  <p>Total Revenue: <%= number_to_currency(@invoice.total_revenue) %></p>
+<section id='bulk_discounts'>
+  <p>Discounted price:  <%= number_to_currency(@invoice.discounted_revenue) %> </p>
+  <p>Total Sale: <%= number_to_currency(@invoice.total_revenue - @invoice.discounted_revenue) %></p>
+</section>
 
   <h4>Customer:</h4>
     <%= @customer.first_name %> <%= @customer.last_name %><br>
@@ -42,7 +45,11 @@
       <% @invoice.invoice_items.each do |i| %>
         <section id="the-status-<%= i.id %>">
           <tr class="tr">
-            <td style="text-align:center"><%= i.item.name %></td>
+                                      <% if @invoice.discounted_items.include?(i) && @invoice.discounted_revenue != 0.0 %>
+            <td style="text-align:center"><%= link_to i.item.name, merchant_bulk_discount_path(@merchant, @invoice.discounted_items.first.id) %></td>
+                                      <% elsif %>
+            <td style="text-align:center"><%= i.item.name %>
+                                      <% end %>
             <td style="text-align:center"><%= i.quantity %></td>
             <td style="text-align:center">$<%= i.unit_price %></td>
             <td style="text-align:center"><%= form_with model: @invoice, url: merchant_invoice_path(@merchant, @invoice), method: :patch, local: true do |f| %>
