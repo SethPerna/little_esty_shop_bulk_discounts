@@ -199,10 +199,38 @@ describe 'merchant invoice show bulk discounts' do
   it 'has a link to discount show page if applicable' do
     visit merchant_invoice_path(@merchant1, @invoice_1)
     within "#the-status-#{@ii_1.id}" do
-      save_and_open_page
       expect(page).to have_link(@item_1.name)
       click_link(@item_1.name)
       expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_1))
+    end
+  end
+
+  it 'has different links for different discounts' do
+    @invoice_5 = Invoice.create!(customer_id: @customer_1.id, status: 2, created_at: "2012-03-27 14:54:09")
+
+    @ii_9 = InvoiceItem.create!(invoice_id: @invoice_5.id, item_id: @item_1.id, quantity: 12, unit_price: 10, status: 2)
+    @ii_10 = InvoiceItem.create!(invoice_id: @invoice_5.id, item_id: @item_2.id, quantity: 15, unit_price: 10, status: 2)
+    @bulk_5 = @merchant1.bulk_discounts.create!(percent: 12, threshold: 10)
+    @bulk_6 = @merchant1.bulk_discounts.create!(percent: 15, threshold: 15)
+    visit merchant_invoice_path(@merchant1, @invoice_5)
+    within "#the-status-#{@ii_9.id}" do
+      expect(page).to have_link(@item_1.name)
+      click_link(@item_1.name)
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_1))
+    end
+  end
+  it 'tests second link on page' do
+    @invoice_5 = Invoice.create!(customer_id: @customer_1.id, status: 2, created_at: "2012-03-27 14:54:09")
+
+    @ii_9 = InvoiceItem.create!(invoice_id: @invoice_5.id, item_id: @item_1.id, quantity: 12, unit_price: 10, status: 2)
+    @ii_10 = InvoiceItem.create!(invoice_id: @invoice_5.id, item_id: @item_2.id, quantity: 15, unit_price: 10, status: 2)
+    @bulk_5 = @merchant1.bulk_discounts.create!(percent: 12, threshold: 10)
+    @bulk_6 = @merchant1.bulk_discounts.create!(percent: 15, threshold: 15)
+    visit merchant_invoice_path(@merchant1, @invoice_5)
+    within "#the-status-#{@ii_10.id}" do
+      expect(page).to have_link(@item_2.name)
+      click_link(@item_2.name)
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_2))
     end
   end
 end
