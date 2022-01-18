@@ -46,7 +46,7 @@
         <section id="the-status-<%= i.id %>">
           <tr class="tr">
                                       <% if @invoice.discounted_items.include?(i) && @invoice.discounted_revenue != 0.0 %>
-            <td style="text-align:center"><%= link_to i.item.name, merchant_bulk_discount_path(@merchant, i.bulk_discounts.first.id) %></td>
+            <td style="text-align:center"><%= link_to i.item.name, merchant_bulk_discount_path(@merchant, i.match_discount(i.id).id) %></td>
                                       <% elsif %>
             <td style="text-align:center"><%= i.item.name %>
                                       <% end %>
