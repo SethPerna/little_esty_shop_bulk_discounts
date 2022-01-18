@@ -19,7 +19,6 @@ class InvoiceItem < ApplicationRecord
     bulk_discounts = BulkDiscount.order(:threshold)
     invoice_item = InvoiceItem.find(id)
     discount = nil
-
     bulk_discounts.each do |d|
       if invoice_item.quantity >= d.threshold
         discount = d
