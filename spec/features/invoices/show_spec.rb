@@ -223,7 +223,7 @@ describe 'merchant invoice show bulk discounts' do
 
     @ii_9 = InvoiceItem.create!(invoice_id: @invoice_5.id, item_id: @item_1.id, quantity: 12, unit_price: 10, status: 2)
     @ii_10 = InvoiceItem.create!(invoice_id: @invoice_5.id, item_id: @item_2.id, quantity: 15, unit_price: 10, status: 2)
-    @bulk_5 = @merchant1.bulk_discounts.create!(percent: 12, threshold: 10)
+    @bulk_5 = @merchant1.bulk_discounts.create!(percent: 10, threshold: 10)
     @bulk_6 = @merchant1.bulk_discounts.create!(percent: 15, threshold: 15)
     visit merchant_invoice_path(@merchant1, @invoice_5)
     within "#the-status-#{@ii_10.id}" do
