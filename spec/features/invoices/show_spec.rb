@@ -112,7 +112,6 @@ describe 'merchant invoice show bulk discounts' do
     @ii_1 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_1.id, quantity: 10, unit_price: 10, status: 2)
     @ii_2 = InvoiceItem.create!(invoice_id: @invoice_1.id, item_id: @item_2.id, quantity: 5, unit_price: 10, status: 2)
 
-    @transaction1 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_1.id)
     @bulk_1 = @merchant1.bulk_discounts.create!(percent: 10, threshold: 10)
     @bulk_2 = @merchant1.bulk_discounts.create!(percent: 15, threshold: 15)
 
@@ -216,10 +215,10 @@ describe 'merchant invoice show bulk discounts' do
     within "#the-status-#{@ii_9.id}" do
       expect(page).to have_link(@item_1.name)
       click_link(@item_1.name)
-      expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_1))
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_5))
     end
   end
-  xit 'tests second link on page' do
+  it 'tests second link on page' do
     @invoice_5 = Invoice.create!(customer_id: @customer_1.id, status: 2, created_at: "2012-03-27 14:54:09")
 
     @ii_9 = InvoiceItem.create!(invoice_id: @invoice_5.id, item_id: @item_1.id, quantity: 12, unit_price: 10, status: 2)
@@ -230,7 +229,7 @@ describe 'merchant invoice show bulk discounts' do
     within "#the-status-#{@ii_10.id}" do
       expect(page).to have_link(@item_2.name)
       click_link(@item_2.name)
-      expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_2))
+      expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_6))
     end
   end
 end
